@@ -15,7 +15,7 @@
       <div>{{ currency }}</div>
       <div>
         <UDropdown :items="items" :popper="{ placement: 'bottom-start' }">
-          <UButton color="white" variant="ghost" trailing-icon="i-heroicons-ellipsis-horizontal" />
+          <UButton color="white" variant="ghost" trailing-icon="i-heroicons-ellipsis-horizontal" :loading="isLoading"/>
         </UDropdown>
       </div>
     </div>
@@ -26,6 +26,7 @@
 const props = defineProps({
   transaction: Object
 })
+const emit = defineEmits(['deleted'])
 const isIncome = computed(() => props.transaction.type === 'Income')
 const icon = isIncome.value ? 'i-heroicons-arrow-up-right' : 'i-heroicons-arrow-down-right'
 const iconColor = isIncome.value ? 'text-green-600' : 'text-red-600'
@@ -34,18 +35,24 @@ const isLoading = ref(false)
 const toast = useToast()
 const supabase = useSupabaseClient()
 const deleteTransaction = async () => {
-  console.log('Delete')
   isLoading.value = true
   try {
     await supabase.from('transactions')
         .delete()
-        .eq('id', props.transaction.transaction.id)
+        .eq('id', props.transaction.id)
     toast.add({
       title: 'Transaction deleted successfully.',
-      icon: '',
+      icon: 'i-heroicons-check-circle',
+      color: 'green'
     })
+    emit('deleted', props.transaction.id)
   } catch (error) {
     console.error(error)
+    toast.add({
+      title: 'Transaction deleted successfully.',
+      icon: 'i-heroicons-exclamation-circle',
+      color: 'red'
+    })
   } finally {
     isLoading.value = false
   }
