@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import {transactionViewOptions} from "~/constans.js";
+import {transactionViewOptions} from "~/constants.js";
 const supabase = useSupabaseClient()
 
 const selectedView = ref(transactionViewOptions[1])
