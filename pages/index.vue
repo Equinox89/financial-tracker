@@ -43,7 +43,10 @@
 import {transactionViewOptions} from "~/constants.js";
 const selectedView = ref(transactionViewOptions[1])
 
+console.log(selectedView.value)
+
 const isOpen = ref(false)
+const dates = useSelectedTimePeriod(selectedView)
 
 const { pending, refresh, transactions: {
   incomeCount,
